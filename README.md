@@ -5,7 +5,7 @@
 ## 설치 방법
 ```bash
 git clone https://github.com/jhs-322/project2.git
-cd project1
+cd project2
 pip install -r requirements.txt
 python Main.py
 ```
