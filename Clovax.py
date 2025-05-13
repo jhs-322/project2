@@ -114,7 +114,7 @@ class ClovaXScanner:
             print(res)
 
 def main():
-    api_key = os.getenv("OPEN_API_KEY")  # 네 API 키
+    api_key = os.getenv("OPENAI_API_KEY")  # 네 API 키
     scanner = ClovaXScanner(api_key)
     scanner.load_file()
     scanner.analyze_chunks()
