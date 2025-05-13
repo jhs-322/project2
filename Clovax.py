@@ -5,6 +5,7 @@ from openai import OpenAI
 import os
 import time
 import sys
+from dotenv import load_dotenv
 
 # 안전하게 stdout, stderr reconfigure
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
@@ -114,6 +115,7 @@ class ClovaXScanner:
             print(res)
 
 def main():
+    load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")  # 네 API 키
     scanner = ClovaXScanner(api_key)
     scanner.load_file()
