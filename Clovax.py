@@ -2,8 +2,8 @@
 # 최종 - 이중 분석 모드 + 자동 재시도(backoff) 적용 + 분석 1회 성공 시 조기 종료
 
 from openai import OpenAI
-import os
 import time
+import os
 import sys
 from dotenv import load_dotenv
 
@@ -116,17 +116,9 @@ class ClovaXScanner:
 
 def main():
     load_dotenv()
-    api_key = os.getenv("OPENAI_API_KEY")  # 네 API 키
-    
-    if not api_key:
-        print("❌ API 키를 불러오지 못했습니다!")
-    else:
-        print(f"✅ API 키 로딩 성공")
+    time.sleep(2)
+    api_key = os.getenv("KEY")  # 네 API 키
     scanner = ClovaXScanner(api_key)
     scanner.load_file()
     scanner.analyze_chunks()
-    # scanner.show_results()
     scanner.save_results()
-
-if __name__ == "__main__":
-    main()
