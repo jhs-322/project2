@@ -93,11 +93,11 @@ class FinalResult:
         # 결과 출력
         print("\n[최종 결과]")
         # 모든 탐지 방법에서 탐지될 경우 : 위험
-        if len(self.extracted)>1 and cnt>1:
+        if len(self.extracted)>=1 and cnt>=1:
             print("🔴 [위험] cryptojacking 시도 중인 사이트입니다. 🔴")
             print(f"AI 정적분석에서 {len(self.extracted)}개, 시그니처 기반 정적분석에서 {cnt}개의 위험요소가 발견되었습니다.")
-        # 한 가지 탐지 방법에서라도 탐지될 경우 : 의심
-        elif len(self.extracted)>=1 or cnt>=1:
+        # 한 가지 탐지 방법에서만 탐지될 경우 : 의심
+        elif ( len(self.extracted)>=1 and cnt==0) or ( len(self.extracted)==0 and cnt>=1):
             print("🟡 [의심] cryptojacking 시도 중인 사이트일 가능성이 높습니다. 🟡")
             print(f"AI 정적분석에서 {len(self.extracted)}개, 시그니처 기반 정적분석에서 {cnt}개의 위험요소가 발견되었습니다.")
         # 모든 탐지 방법에서 탐지되지 않은 경우 : 안전
