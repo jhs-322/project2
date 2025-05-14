@@ -19,12 +19,12 @@ python Main.py
 ### 1. URL 입력
 - 검사할 웹사이트의 URL을 입력하면,
 - 해당 URL에서 JavaScript 파일만을 자동 추출하여 combined.txt 파일로 저장합니다.
-![1단계 - URL 입력](screenshots/step1.png)
+![1단계 - URL 입력](screenshots/s1.png)
 
 ### 2. JavaScript 코드 분석
 - Clova API를 이용해 의심 키워드를 분석하고 결과를 clovax_analysis_result.txt 파일로 저장합니다.
-![2단계 - 코드 분석](screenshots/step2.png)
+![2단계 - 코드 분석](screenshots/s2.png)
 
 ### 3. 결과 출력
 - 사이트의 위험도를 안전/의심/위험으로 출력합니다.<br/>
-![3단계 - 결과 출력](screenshots/step3.png)
+![3단계 - 결과 출력](screenshots/s3.png)
