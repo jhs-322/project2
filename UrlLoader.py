@@ -86,7 +86,7 @@ class MakeFileByUrl:
                 response = requests.head(self.base_url, timeout=5)
                 # 정상이라면
                 if response.status_code < 400: 
-                    self.folder_name = "file_" + parsed.netloc.replace('.', '_')
+                    self.folder_name = "file_" + parsed.netloc.replace('.', '_').replace(':', '_')
                     print(f"저장 폴더명: {self.folder_name}")
                     break
                 # 400이상의 상태 코드 발생 시 재입력
@@ -136,6 +136,12 @@ class MakeFileByUrl:
             if self.driver:
                 self.driver.quit()
 
+    # 바이너리 파일인지
+    def is_binary(self, file_path):
+        with open(file_path, 'rb') as f:
+            chunk = f.read(1024)
+        return b'\x00' in chunk
+
     def download_file(self):
         '''웹 페이지 소스 파일 다운로드'''
         self._setup_driver()
@@ -143,7 +149,7 @@ class MakeFileByUrl:
         try:
             print("웹페이지 접속 중...")
             self.driver.get(self.base_url)
-            WebDriverWait(self.driver, 7).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+            WebDriverWait(self.driver, 15).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
             self.html = self.driver.page_source
             selenium_cookies = {cookie['name']: cookie['value'] for cookie in self.driver.get_cookies()} #쿠키
         except Exception as e:
@@ -157,6 +163,7 @@ class MakeFileByUrl:
         self.soup = BeautifulSoup(self.html, 'html.parser')
         EXTENSIONS = ['.js', '.html']
         tags_attrs = [('script', 'src'), ('link', 'href'), ('a', 'href')]
+
 
         for tag, attr in tags_attrs:
             for element in self.soup.find_all(tag):
@@ -187,7 +194,7 @@ class MakeFileByUrl:
                         }
                         res = requests.get(full_url, headers=headers, cookies=selenium_cookies, timeout=7)
                         res.raise_for_status()
-
+                        
                         # 기본 filename 초기화 (문자열이 없을 경우 index.html로 지정)
                         filename = os.path.basename(path) or 'index.html'
                         filename = self.edit_filename(filename) # 긴 파일명 수정
@@ -197,9 +204,10 @@ class MakeFileByUrl:
                             continue 
                         self.downloaded.add(filename)
 
-                        # 파일 저장
+                        # 파일 저장 -> encoding추가 ***
                         save_path = os.path.join(self.SAVE_DIR, filename)
-                        with open(save_path, 'wb') as f:
+                        
+                        with open(save_path, 'wb') as f: 
                             f.write(res.content)
                         print(f"저장됨: {filename}")
                         
@@ -208,7 +216,14 @@ class MakeFileByUrl:
                         print(f"다운로드 실패: {full_url} ({e})")
                         if "403" in str(e):
                             self.selenium_download_js(full_url) # 함수 호출
-
+    
+    
+    # 압축 혹은 난독화된 js 파일 -> JavaScript 디코더나 Beautifier
+    def decode_or_unzip(self,file_path):
+        with open(file_path, "r") as f:
+            f.read()
+    
+    
     def extract_js(self):
         '''JS 파일 추출'''
         for filename in os.listdir(self.SAVE_DIR):
@@ -218,6 +233,13 @@ class MakeFileByUrl:
             if filename.endswith(('.js', '.html')) or '.' not in filename:
                 is_html = filename.endswith('.html')
                 try:
+                    
+                    if (self.is_binary(filepath)):
+                        print("바이너리 파일입니다.")
+                        continue
+                    else:
+                        print("텍스트 파일입니다.")
+                    
                     with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                         content = f.read()
                         
@@ -250,7 +272,6 @@ class MakeFileByUrl:
         for filename, content in self.js_list:
             clean_code = self.remove_annotation(content) # 주석 삭제
             combined_code.append(f"\n\n// ===== {filename} =====\n{clean_code.strip()}") # 파일 이름 표시
-        
 
         # 저장
         with open("combined.txt", 'w', encoding='utf-8') as f:
