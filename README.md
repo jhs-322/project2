@@ -22,9 +22,10 @@ python Main.py
 ![1단계 - URL 입력](screenshots/s1.png)
 
 ### 2. JavaScript 코드 분석
-- Clova API를 이용해 의심 키워드를 분석하고 결과를 clovax_analysis_result.txt 파일로 저장합니다.
+- Clova API를 이용해 의심 키워드를 분석합니다. 
 ![2단계 - 코드 분석](screenshots/s2.png)
 
 ### 3. 결과 출력
-- 사이트의 위험도를 안전/의심/위험으로 출력합니다.<br/>
+- 전체 탐지 결과를 final.txt 파일로 저장합니다.
+- 사이트의 위험도를 안전/의심/위험으로 출력합니다.
 ![3단계 - 결과 출력](screenshots/s3.png)
