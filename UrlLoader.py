@@ -235,10 +235,9 @@ class MakeFileByUrl:
                 try:
                     
                     if (self.is_binary(filepath)):
-                        print("바이너리 파일입니다.")
                         continue
-                    else:
-                        print("텍스트 파일입니다.")
+                    if self.is_brotli_compressed(filepath):
+                        continue
                     
                     with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                         content = f.read()
