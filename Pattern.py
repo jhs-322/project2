@@ -25,7 +25,6 @@ class SignatureDetector:
                 break
             except Exception as e:
                 print(f"[!] 파일 열기 실패: {filepath} ({e})")
-            print(f"\n[파일 분석] {filepath}")
 
     def process_patterns(self):
         '''패턴 탐지 결과 리스트에 저장'''
